@@ -24,22 +24,18 @@ $site = [
     /* --- ATELIERS : ajoute un bloc [ ... ] pour chaque atelier --- */
     'ateliers' => [
         [
-            'title' => 'Atelier : Formulaire de contact en PHP',
-            'date'  => '2026',
+            'title' => 'Atelier 1 : Gestion de projet : Méthodes classiques',
+            'date'  => '28/09/2026',
             'desc'  => "Validation des champs, protection contre les failles et envoi d'email.",
-            'tags'  => ['PHP', 'Sécurité'],
+            'img'=>'C:\Users\HP\Desktop\portfolio\public\images',
         ],
         [
-            'title' => 'Atelier : CRUD avec MySQL',
+            'title' => 'Atelier 2 :' ,
             'date'  => '2026',
-            'desc'  => "Création, lecture, modification et suppression de données avec PDO.",
-            'tags'  => ['PHP', 'MySQL', 'PDO'],
         ],
         [
-            'title' => 'Atelier : Page responsive',
+            'title' => 'Atelier 3 :',
             'date'  => '2025',
-            'desc'  => "Mise en page adaptée à tous les écrans avec Flexbox et Grid.",
-            'tags'  => ['HTML', 'CSS'],
         ],
         // [ 'title' => '...', 'date' => '...', 'desc' => '...', 'tags' => ['...'] ],
     ],
@@ -47,26 +43,14 @@ $site = [
     /* --- PROJETS : ajoute un bloc [ ... ] pour chaque projet --- */
     'projects' => [
         [
-            'title' => 'Gestion de stock',
-            'desc'  => "Application de suivi des produits, entrées et sorties avec tableau de bord.",
-            'stack' => ['PHP', 'MySQL', 'Bootstrap'],
+            'title' => '#',
+            'desc'  =>'#',
+            'stack' => '#',
             'url'   => '#',   // lien de la démo
             'code'  => '#',   // lien GitHub
         ],
-        [
-            'title' => 'Site e-commerce',
-            'desc'  => "Catalogue de produits, panier et gestion des commandes.",
-            'stack' => ['Laravel', 'MySQL', 'JavaScript'],
-            'url'   => '#',
-            'code'  => '#',
-        ],
-        [
-            'title' => 'Mon troisième projet',
-            'desc'  => "Décris ici ton projet en une ou deux phrases.",
-            'stack' => ['HTML', 'CSS', 'JavaScript'],
-            'url'   => '#',
-            'code'  => '#',
-        ],
+     
+     
     ],
 
     'socials' => [
