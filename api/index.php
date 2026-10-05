@@ -30,8 +30,11 @@ $site = [
         'Git / GitHub'
     ],
 
-    /* ATELIERS */
+    /* =================================================
+       ATELIERS
+    ================================================= */
     'ateliers' => [
+
         [
             'title' => 'Atelier 1 : Gestion de projet',
             'date' => '28/09/2026',
@@ -44,7 +47,7 @@ $site = [
         ],
 
         [
-            'title' => 'Atelier 2 : Gestion de projet',
+            'title' => 'Atelier 2 : Gestion de projet Agile ',
             'date' => '2026',
             'desc' => "Travail pratique réalisé dans le cadre de ma formation.",
             'img' => 'public/images/atelier2.jpg',
@@ -63,11 +66,46 @@ $site = [
                 'Développement web',
                 'Pratique'
             ]
+        ],
+
+        [
+            'title' => 'Atelier 4 : Développement web',
+            'date' => '2026',
+            'desc' => "Mise en pratique des connaissances acquises en développement web.",
+            'tags' => [
+                'HTML',
+                'CSS',
+                'JavaScript'
+            ]
+        ],
+
+        [
+            'title' => 'Atelier 5 : Base de données',
+            'date' => '2026',
+            'desc' => "Travail pratique autour de la conception et de la gestion des bases de données.",
+            'tags' => [
+                'MySQL',
+                'Base de données'
+            ]
+        ],
+
+        [
+            'title' => 'Atelier 6 : Projet pratique',
+            'date' => '2026',
+            'desc' => "Réalisation d'un projet pratique permettant de mettre en application les compétences acquises.",
+            'tags' => [
+                'Projet',
+                'Pratique'
+            ]
         ]
+
     ],
 
-    /* PROJETS */
+    /* =================================================
+       PROJETS
+    ================================================= */
     'projects' => [
+
         [
             'title' => 'VENDO',
             'desc' => "VENDO est une plateforme web de petites annonces permettant aux utilisateurs de publier et de consulter des annonces.",
@@ -80,9 +118,12 @@ $site = [
             'url' => '#',
             'code' => '#'
         ]
+
     ],
 
-    /* RÉSEAUX SOCIAUX */
+    /* =================================================
+       RÉSEAUX SOCIAUX
+    ================================================= */
     'socials' => [
         'GitHub' => '#',
         'LinkedIn' => '#'
@@ -112,6 +153,7 @@ $old = [
     'message' => ''
 ];
 
+
 /* Création du token CSRF */
 
 if (empty($_SESSION['csrf'])) {
@@ -129,6 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'message' => trim($_POST['message'] ?? '')
     ];
 
+
     /* Vérification CSRF */
 
     if (
@@ -136,33 +179,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         !is_string($_POST['csrf']) ||
         !hash_equals($_SESSION['csrf'], $_POST['csrf'])
     ) {
+
         $flash = [
             'error',
             'Session expirée. Recharge la page et réessaie.'
         ];
+
     }
+
 
     /* Protection anti-spam */
 
     elseif (!empty($_POST['website'])) {
+
         $flash = [
             'ok',
             'Message envoyé.'
         ];
+
     }
 
-    /* Validation des champs */
+
+    /* Validation */
 
     elseif (
         $old['name'] === '' ||
         $old['message'] === '' ||
         !filter_var($old['email'], FILTER_VALIDATE_EMAIL)
     ) {
+
         $flash = [
             'error',
             'Remplis tous les champs avec une adresse email valide.'
         ];
+
     }
+
 
     /* Envoi du message */
 
@@ -180,6 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'From: ' . $site['email'] . "\r\n" .
             'Reply-To: ' . $old['email'] . "\r\n" .
             'Content-Type: text/plain; charset=UTF-8';
+
 
         if (@mail(
             $site['email'],
@@ -206,38 +259,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "L'envoi a échoué. Écris-moi directement à " .
                 $site['email'] . '.'
             ];
+
         }
+
     }
 }
+
 ?>
 
+
 <!DOCTYPE html>
+
 <html lang="fr">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
     <title>
         <?= e($site['name']) ?> —
         <?= e($site['role']) ?>
     </title>
 
-    <meta name="description"
-          content="<?= e($site['tagline']) ?>">
+    <meta
+        name="description"
+        content="<?= e($site['tagline']) ?>"
+    >
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <!-- Google Fonts -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
-          rel="stylesheet">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
 
 
     <style>
@@ -247,17 +318,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         :root {
+
             --bg: #0c1220;
+
             --panel: #151d30;
+
             --line: #26324d;
 
             --text: #e8ecf5;
+
             --muted: #8f9bb8;
 
             --accent: #ffb454;
+
             --accent-ink: #1a1204;
 
             --ok: #5fd0a0;
+
             --err: #ff7a7a;
         }
 
@@ -272,28 +349,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 0;
         }
 
+
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 4.5rem;
         }
 
+
         body {
+
             background: var(--bg);
+
             color: var(--text);
-            font: 400 1rem/1.7 'Inter', system-ui, sans-serif;
+
+            font:
+                400 1rem/1.7
+                'Inter',
+                system-ui,
+                sans-serif;
         }
+
 
         a {
             color: inherit;
             text-decoration: none;
         }
 
+
         ul {
             list-style: none;
         }
 
+
         :focus-visible {
-            outline: 2px solid var(--accent);
+
+            outline:
+                2px solid
+                var(--accent);
+
             outline-offset: 3px;
         }
 
@@ -303,30 +396,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .wrap {
+
             max-width: 1040px;
+
             margin: 0 auto;
-            padding: 0 1.5rem;
+
+            padding:
+                0 1.5rem;
         }
+
 
         .narrow {
             max-width: 640px;
         }
 
+
         h1,
         h2,
         h3,
         .brand {
-            font-family: 'Bricolage Grotesque', sans-serif;
+
+            font-family:
+                'Bricolage Grotesque',
+                sans-serif;
+
             line-height: 1.15;
         }
 
+
         h2 {
+
             font-size: 2rem;
+
             margin-bottom: 1.5rem;
         }
 
+
         section {
-            padding: 5rem 1.5rem 2rem;
+
+            padding:
+                5rem 1.5rem 2rem;
         }
 
 
@@ -335,36 +444,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .top {
+
             position: sticky;
+
             top: 0;
+
             z-index: 10;
 
-            background: rgba(12, 18, 32, .88);
+            background:
+                rgba(12, 18, 32, .88);
+
             backdrop-filter: blur(8px);
 
-            border-bottom: 1px solid var(--line);
+            border-bottom:
+                1px solid
+                var(--line);
         }
 
+
         .top nav {
+
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             align-items: center;
 
             padding-block: 1rem;
         }
 
+
         .brand {
+
             font-weight: 800;
+
             font-size: 1.15rem;
         }
 
+
         .top ul {
+
             display: flex;
+
             gap: 1.5rem;
 
             color: var(--muted);
+
             font-size: .95rem;
         }
+
 
         .top ul a:hover {
             color: var(--text);
@@ -376,68 +505,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .hero {
+
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
+
+            grid-template-columns:
+                1.2fr 1fr;
 
             gap: 3rem;
+
             align-items: center;
 
-            min-height: calc(100vh - 4rem);
+            min-height:
+                calc(100vh - 4rem);
         }
 
+
         .school {
-            font: 500 .85rem 'JetBrains Mono', monospace;
+
+            font:
+                500 .85rem
+                'JetBrains Mono',
+                monospace;
 
             color: var(--accent);
+
             margin-bottom: 1rem;
         }
 
+
         .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
+
+            font-size:
+                clamp(
+                    2.2rem,
+                    5vw,
+                    3.6rem
+                );
+
             font-weight: 800;
+
             letter-spacing: -.02em;
         }
 
+
         .lead {
+
             color: var(--muted);
+
             font-size: 1.1rem;
 
             max-width: 34rem;
 
-            margin: 1.25rem 0 2rem;
+            margin:
+                1.25rem 0 2rem;
         }
 
+
         .actions {
+
             display: flex;
+
             gap: .8rem;
+
             flex-wrap: wrap;
         }
 
+
         .btn {
+
             display: inline-block;
 
-            padding: .75rem 1.5rem;
+            padding:
+                .75rem 1.5rem;
 
             border-radius: 6px;
-            border: 1px solid var(--accent);
+
+            border:
+                1px solid
+                var(--accent);
 
             background: var(--accent);
+
             color: var(--accent-ink);
 
-            font: 700 .95rem 'Inter', sans-serif;
+            font:
+                700 .95rem
+                'Inter',
+                sans-serif;
 
             cursor: pointer;
-            transition: transform .15s;
+
+            transition:
+                transform .15s;
         }
+
 
         .btn:hover {
             transform: translateY(-2px);
         }
 
+
         .btn.ghost {
+
             background: transparent;
+
             color: var(--text);
-            border-color: var(--line);
+
+            border-color:
+                var(--line);
         }
 
 
@@ -446,29 +621,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .code {
-            background: var(--panel);
 
-            border: 1px solid var(--line);
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--line);
+
             border-radius: 8px;
 
             padding: 1.5rem;
 
             overflow-x: auto;
 
-            font: 400 .9rem/1.8 'JetBrains Mono', monospace;
+            font:
+                400 .9rem/1.8
+                'JetBrains Mono',
+                monospace;
         }
+
 
         .code .c {
             color: #62708f;
         }
 
+
         .code .k {
             color: var(--accent);
         }
 
+
         .code .s {
             color: #8fc7ff;
         }
+
 
         .code .v {
             color: var(--ok);
@@ -480,31 +667,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .about {
+
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
+
+            grid-template-columns:
+                1.3fr 1fr;
 
             gap: 2.5rem;
+
             align-items: start;
         }
 
+
         .about p {
+
             color: var(--muted);
+
             max-width: 38rem;
         }
 
+
         .skills {
+
             display: flex;
+
             flex-wrap: wrap;
+
             gap: .5rem;
         }
 
+
         .skills li,
         .tags li {
-            font: 500 .8rem 'JetBrains Mono', monospace;
 
-            padding: .3rem .7rem;
+            font:
+                500 .8rem
+                'JetBrains Mono',
+                monospace;
 
-            border: 1px solid var(--line);
+            padding:
+                .3rem .7rem;
+
+            border:
+                1px solid
+                var(--line);
+
             border-radius: 4px;
         }
 
@@ -514,57 +721,135 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .ateliers {
-            border-left: 2px solid var(--line);
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 1.5rem;
         }
+
 
         .atelier {
-            position: relative;
-            padding: 0 0 2rem 1.8rem;
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--line);
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            padding: 0;
+
+            transition:
+                transform .2s,
+                border-color .2s,
+                box-shadow .2s;
         }
+
+
+        .atelier:hover {
+
+            transform:
+                translateY(-5px);
+
+            border-color:
+                var(--accent);
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, .22);
+        }
+
 
         .atelier::before {
-            content: '';
-
-            position: absolute;
-            left: -7px;
-            top: .5rem;
-
-            width: 12px;
-            height: 12px;
-
-            border-radius: 50%;
-            background: var(--accent);
+            display: none;
         }
 
-        .atelier time {
-            font: 500 .8rem 'JetBrains Mono', monospace;
-            color: var(--muted);
+
+        /* Image de chaque atelier */
+
+        .atelier-image {
+
+            width: 100%;
+
+            height: 220px;
+
+            overflow: hidden;
+
+            background: var(--bg);
         }
 
-        .atelier h3 {
-            font-size: 1.2rem;
-            margin: .2rem 0 .5rem;
-        }
 
-        .atelier p {
-            color: var(--muted);
-            font-size: .95rem;
+        .atelier-image img {
 
-            margin-bottom: .8rem;
-            max-width: 40rem;
-        }
-
-        .atelier img {
             display: block;
 
             width: 100%;
-            max-width: 400px;
-            height: auto;
 
-            margin: 1rem 0;
+            height: 100%;
 
-            border: 1px solid var(--line);
-            border-radius: 8px;
+            object-fit: cover;
+
+            margin: 0;
+
+            border: 0;
+
+            border-radius: 0;
+
+            transition:
+                transform .3s;
+        }
+
+
+        .atelier:hover
+        .atelier-image img {
+
+            transform:
+                scale(1.04);
+        }
+
+
+        /* Contenu */
+
+        .atelier-content {
+
+            padding: 1.3rem;
+        }
+
+
+        .atelier time {
+
+            font:
+                500 .8rem
+                'JetBrains Mono',
+                monospace;
+
+            color: var(--accent);
+        }
+
+
+        .atelier h3 {
+
+            font-size: 1.2rem;
+
+            margin:
+                .35rem 0 .55rem;
+        }
+
+
+        .atelier p {
+
+            color: var(--muted);
+
+            font-size: .95rem;
+
+            margin-bottom: .9rem;
         }
 
 
@@ -573,163 +858,328 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ===================================================== */
 
         .tags {
+
             display: flex;
+
             flex-wrap: wrap;
+
             gap: .4rem;
         }
 
 
         /* =====================================================
-           10. PROJECTS
+           10. BOUTON PHOTOS
         ===================================================== */
 
-        .grid {
+        .photos-button {
+
+            display: inline-block;
+
+            margin-top: 1.5rem;
+        }
+
+
+        /* =====================================================
+           11. GALERIE PHOTOS
+        ===================================================== */
+
+        .atelier-photos {
+
+            margin-top: 4rem;
+
+            scroll-margin-top: 5rem;
+        }
+
+
+        .atelier-photos h3 {
+
+            font-size: 1.5rem;
+
+            margin-bottom: 1.2rem;
+        }
+
+
+        .photos-grid {
+
             display: grid;
 
             grid-template-columns:
-                repeat(auto-fit, minmax(280px, 1fr));
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+
+            gap: 1rem;
+        }
+
+
+        .photo-item {
+
+            display: block;
+
+            overflow: hidden;
+
+            border:
+                1px solid
+                var(--line);
+
+            border-radius: 8px;
+
+            background:
+                var(--panel);
+        }
+
+
+        .photo-item img {
+
+            display: block;
+
+            width: 100%;
+
+            height: 190px;
+
+            object-fit: cover;
+
+            transition:
+                transform .3s;
+        }
+
+
+        .photo-item:hover img {
+
+            transform:
+                scale(1.04);
+        }
+
+
+        /* =====================================================
+           12. PROJECTS
+        ===================================================== */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(280px, 1fr)
+                );
 
             gap: 1.5rem;
         }
 
-        .card {
-            background: var(--panel);
 
-            border: 1px solid var(--line);
+        .card {
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--line);
+
             border-radius: 8px;
 
             padding: 1.5rem;
 
             display: flex;
+
             flex-direction: column;
+
             gap: 1rem;
 
-            transition: transform .2s;
+            transition:
+                transform .2s;
         }
+
 
         .card:hover {
-            transform: translateY(-4px);
+
+            transform:
+                translateY(-4px);
         }
 
+
         .card h3 {
+
             font-size: 1.3rem;
         }
 
+
         .card > p {
+
             color: var(--muted);
+
             font-size: .95rem;
         }
+
 
         .card .tags {
             margin-top: auto;
         }
 
+
         .links {
+
             display: flex;
+
             gap: 1.2rem;
+
             font-weight: 500;
         }
 
+
         .links a {
+
             color: var(--accent);
-            border-bottom: 1px solid transparent;
+
+            border-bottom:
+                1px solid transparent;
         }
 
+
         .links a:hover {
-            border-color: var(--accent);
+
+            border-color:
+                var(--accent);
         }
 
 
         /* =====================================================
-           11. CONTACT
+           13. CONTACT
         ===================================================== */
 
         form {
+
             display: grid;
+
             gap: 1.1rem;
         }
 
+
         label {
+
             display: grid;
+
             gap: .4rem;
 
             color: var(--muted);
+
             font-size: .9rem;
         }
 
+
         input,
         textarea {
+
             width: 100%;
 
-            padding: .8rem .9rem;
+            padding:
+                .8rem .9rem;
 
-            background: var(--panel);
+            background:
+                var(--panel);
 
-            border: 1px solid var(--line);
+            border:
+                1px solid
+                var(--line);
+
             border-radius: 6px;
 
             color: var(--text);
+
             font: inherit;
         }
 
+
         input:focus,
         textarea:focus {
+
             outline: none;
-            border-color: var(--accent);
+
+            border-color:
+                var(--accent);
         }
+
 
         textarea {
             resize: vertical;
         }
 
+
         .hp {
+
             position: absolute;
+
             left: -9999px;
         }
 
+
         .flash {
-            padding: .8rem 1rem;
+
+            padding:
+                .8rem 1rem;
 
             border-radius: 6px;
+
             margin-bottom: 1.2rem;
 
             border: 1px solid;
         }
 
+
         .flash.ok {
+
             color: var(--ok);
-            border-color: var(--ok);
+
+            border-color:
+                var(--ok);
         }
 
+
         .flash.error {
+
             color: var(--err);
-            border-color: var(--err);
+
+            border-color:
+                var(--err);
         }
 
 
         /* =====================================================
-           12. FOOTER
+           14. FOOTER
         ===================================================== */
 
         footer {
+
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             flex-wrap: wrap;
 
             gap: 1rem;
 
             margin-top: 5rem;
+
             padding-block: 2rem;
 
-            border-top: 1px solid var(--line);
+            border-top:
+                1px solid
+                var(--line);
 
             color: var(--muted);
+
             font-size: .9rem;
         }
+
 
         footer a {
             margin-left: 1rem;
         }
+
 
         footer a:hover {
             color: var(--text);
@@ -737,60 +1187,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         /* =====================================================
-           13. RESPONSIVE
+           15. RESPONSIVE
         ===================================================== */
 
         @media (max-width: 800px) {
 
             .hero,
-            .about {
+            .about,
+            .ateliers {
+
                 grid-template-columns: 1fr;
             }
 
+
+            .photos-grid {
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+            }
+
+
             .hero {
+
                 min-height: auto;
+
                 padding-top: 3rem;
             }
 
+
             .top ul {
+
                 gap: .8rem;
+
                 font-size: .8rem;
             }
 
+
             .brand {
+
                 font-size: 1rem;
             }
         }
 
+
         @media (max-width: 500px) {
 
             .top nav {
+
                 flex-direction: column;
+
                 gap: 1rem;
             }
 
+
             .top ul {
+
                 flex-wrap: wrap;
+
                 justify-content: center;
             }
 
+
             section {
+
                 padding-top: 3rem;
             }
 
+
             h2 {
+
                 font-size: 1.7rem;
             }
+
+
+            .photos-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .atelier-image {
+
+                height: 200px;
+            }
         }
+
 
         @media (prefers-reduced-motion: reduce) {
 
             html {
+
                 scroll-behavior: auto;
             }
 
+
             .btn,
-            .card {
+            .card,
+            .atelier,
+            .atelier-image img,
+            .photo-item img {
+
                 transition: none;
             }
         }
@@ -811,15 +1310,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <nav class="wrap">
 
-        <a class="brand" href="#top">
+        <a
+            class="brand"
+            href="#top"
+        >
             <?= e($site['name']) ?>
         </a>
 
+
         <ul>
-            <li><a href="#about">À propos</a></li>
-            <li><a href="#ateliers">Ateliers</a></li>
-            <li><a href="#projects">Projets</a></li>
-            <li><a href="#contact">Contact</a></li>
+
+            <li>
+                <a href="#about">
+                    À propos
+                </a>
+            </li>
+
+            <li>
+                <a href="#ateliers">
+                    Ateliers
+                </a>
+            </li>
+
+            <li>
+                <a href="#projects">
+                    Projets
+                </a>
+            </li>
+
+            <li>
+                <a href="#contact">
+                    Contact
+                </a>
+            </li>
+
         </ul>
 
     </nav>
@@ -843,22 +1367,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?= e($site['school']) ?>
         </p>
 
+
         <h1>
+
             Bonjour, je suis
             <?= e($site['name']) ?>.
+
         </h1>
+
 
         <p class="lead">
             <?= e($site['tagline']) ?>
         </p>
 
+
         <p class="actions">
 
-            <a class="btn" href="#projects">
+            <a
+                class="btn"
+                href="#projects"
+            >
                 Voir mes projets
             </a>
 
-            <a class="btn ghost" href="#contact">
+
+            <a
+                class="btn ghost"
+                href="#contact"
+            >
                 Me contacter
             </a>
 
@@ -867,22 +1403,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
 
-    <pre class="code"
-         aria-label="Résumé du profil en code PHP"><code><span class="c">&lt;?php</span>
+
+    <pre
+        class="code"
+        aria-label="Résumé du profil en code PHP"
+    ><code><span class="c">&lt;?php</span>
 <span class="k">$dev</span> = [
   <span class="s">'nom'</span>    =&gt; <span class="v">'<?= e($site['name']) ?>'</span>,
   <span class="s">'ecole'</span>  =&gt; <span class="v">'ISTA NTIC Tanger'</span>,
   <span class="s">'stack'</span>  =&gt; [
-    <?php
-    $firstSkills = array_slice($site['skills'], 0, 3);
-    echo implode(
-        ",\n    ",
-        array_map(
-            fn($s) => '<span class="v">\'' . e($s) . '\'</span>',
-            $firstSkills
-        )
+
+<?php
+
+$firstSkills =
+    array_slice(
+        $site['skills'],
+        0,
+        3
     );
-    ?>
+
+echo implode(
+    ",\n    ",
+    array_map(
+        fn($s) =>
+            '<span class="v">\'' .
+            e($s) .
+            '\'</span>',
+        $firstSkills
+    )
+);
+
+?>
+
   ],
   <span class="s">'dispo'</span>  =&gt; <span class="v">true</span>,
 ];</code></pre>
@@ -895,9 +1447,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      ABOUT
 ===================================================== -->
 
-<section id="about" class="wrap">
+<section
+    id="about"
+    class="wrap"
+>
 
-    <h2>À propos</h2>
+    <h2>
+        À propos
+    </h2>
+
 
     <div class="about">
 
@@ -905,9 +1463,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?= e($site['about']) ?>
         </p>
 
+
         <ul class="skills">
 
-            <?php foreach ($site['skills'] as $skill): ?>
+            <?php foreach (
+                $site['skills']
+                as $skill
+            ): ?>
 
                 <li>
                     <?= e($skill) ?>
@@ -927,59 +1489,165 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      ATELIERS
 ===================================================== -->
 
-<section id="ateliers" class="wrap">
+<section
+    id="ateliers"
+    class="wrap"
+>
 
-    <h2>Ateliers</h2>
+    <h2>
+        Ateliers
+    </h2>
+
+
+    <!-- LES 6 ATELIERS -->
 
     <div class="ateliers">
 
-        <?php foreach ($site['ateliers'] as $a): ?>
+        <?php foreach (
+            $site['ateliers']
+            as $a
+        ): ?>
+
 
             <article class="atelier">
 
-                <time>
-                    <?= e($a['date']) ?>
-                </time>
 
-                <h3>
-                    <?= e($a['title']) ?>
-                </h3>
+                <!-- IMAGE -->
 
-                <p>
-                    <?= e($a['desc']) ?>
-                </p>
+                <?php if (
+                    !empty($a['img'])
+                ): ?>
 
+                    <div class="atelier-image">
 
-                <?php if (!empty($a['img'])): ?>
+                        <img
+                            src="<?= e($a['img']) ?>"
+                            alt="<?= e($a['title']) ?>"
+                            loading="lazy"
+                        >
 
-                    <img
-                        src="<?= e($a['img']) ?>"
-                        alt="<?= e($a['title']) ?>"
-                        loading="lazy"
-                    >
+                    </div>
 
                 <?php endif; ?>
 
 
-                <?php if (!empty($a['tags'])): ?>
+                <!-- INFORMATIONS -->
 
-                    <ul class="tags">
+                <div class="atelier-content">
 
-                        <?php foreach ($a['tags'] as $t): ?>
+                    <time>
+                        <?= e($a['date']) ?>
+                    </time>
 
-                            <li>
-                                <?= e($t) ?>
-                            </li>
 
-                        <?php endforeach; ?>
+                    <h3>
+                        <?= e($a['title']) ?>
+                    </h3>
 
-                    </ul>
 
-                <?php endif; ?>
+                    <p>
+                        <?= e($a['desc']) ?>
+                    </p>
+
+
+                    <!-- TAGS -->
+
+                    <?php if (
+                        !empty($a['tags'])
+                    ): ?>
+
+                        <ul class="tags">
+
+                            <?php foreach (
+                                $a['tags']
+                                as $t
+                            ): ?>
+
+                                <li>
+                                    <?= e($t) ?>
+                                </li>
+
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                    <?php endif; ?>
+
+                </div>
 
             </article>
 
+
         <?php endforeach; ?>
+
+    </div>
+
+
+
+    <!-- =================================================
+         BOUTON POUR ALLER AUX PHOTOS
+    ================================================= -->
+
+    <a
+        class="btn photos-button"
+        href="#atelier-photos"
+    >
+        📸 Voir les photos
+    </a>
+
+
+
+    <!-- =================================================
+         PHOTOS
+    ================================================= -->
+
+    <div
+        id="atelier-photos"
+        class="atelier-photos"
+    >
+
+        <h3>
+            Photos des ateliers
+        </h3>
+
+
+        <div class="photos-grid">
+
+
+            <?php foreach (
+                $site['ateliers']
+                as $a
+            ): ?>
+
+
+                <?php if (
+                    !empty($a['img'])
+                ): ?>
+
+
+                    <a
+                        class="photo-item"
+                        href="<?= e($a['img']) ?>"
+                        target="_blank"
+                        rel="noopener"
+                    >
+
+                        <img
+                            src="<?= e($a['img']) ?>"
+                            alt="<?= e($a['title']) ?>"
+                            loading="lazy"
+                        >
+
+                    </a>
+
+
+                <?php endif; ?>
+
+
+            <?php endforeach; ?>
+
+
+        </div>
 
     </div>
 
@@ -991,19 +1659,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      PROJECTS
 ===================================================== -->
 
-<section id="projects" class="wrap">
+<section
+    id="projects"
+    class="wrap"
+>
 
-    <h2>Projets</h2>
+    <h2>
+        Projets
+    </h2>
+
 
     <div class="grid">
 
-        <?php foreach ($site['projects'] as $p): ?>
+
+        <?php foreach (
+            $site['projects']
+            as $p
+        ): ?>
+
 
             <article class="card">
+
 
                 <h3>
                     <?= e($p['title']) ?>
                 </h3>
+
 
                 <p>
                     <?= e($p['desc']) ?>
@@ -1012,20 +1693,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <ul class="tags">
 
-                    <?php foreach ($p['stack'] as $t): ?>
+
+                    <?php foreach (
+                        $p['stack']
+                        as $t
+                    ): ?>
+
 
                         <li>
                             <?= e($t) ?>
                         </li>
 
+
                     <?php endforeach; ?>
+
 
                 </ul>
 
 
                 <p class="links">
 
-                    <?php if (!empty($p['url']) && $p['url'] !== '#'): ?>
+
+                    <?php if (
+                        !empty($p['url']) &&
+                        $p['url'] !== '#'
+                    ): ?>
+
 
                         <a
                             href="<?= e($p['url']) ?>"
@@ -1035,10 +1728,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Démo
                         </a>
 
+
                     <?php endif; ?>
 
 
-                    <?php if (!empty($p['code']) && $p['code'] !== '#'): ?>
+                    <?php if (
+                        !empty($p['code']) &&
+                        $p['code'] !== '#'
+                    ): ?>
+
 
                         <a
                             href="<?= e($p['code']) ?>"
@@ -1048,13 +1746,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             Code source
                         </a>
 
+
                     <?php endif; ?>
+
 
                 </p>
 
             </article>
 
+
         <?php endforeach; ?>
+
 
     </div>
 
@@ -1066,12 +1768,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      CONTACT
 ===================================================== -->
 
-<section id="contact" class="wrap narrow">
+<section
+    id="contact"
+    class="wrap narrow"
+>
 
-    <h2>Contact</h2>
+    <h2>
+        Contact
+    </h2>
 
 
     <?php if ($flash): ?>
+
 
         <p
             class="flash <?= e($flash[0]) ?>"
@@ -1080,10 +1788,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?= e($flash[1]) ?>
         </p>
 
+
     <?php endif; ?>
 
 
-    <form method="post" action="#contact">
+    <form
+        method="post"
+        action="#contact"
+    >
+
+
+        <!-- CSRF -->
 
         <input
             type="hidden"
@@ -1092,7 +1807,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         >
 
 
-        <!-- Champ anti-spam -->
+        <!-- Anti-spam -->
 
         <input
             type="text"
@@ -1104,7 +1819,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         >
 
 
+        <!-- NOM -->
+
         <label>
+
             Nom
 
             <input
@@ -1113,10 +1831,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 value="<?= e($old['name']) ?>"
                 required
             >
+
         </label>
 
 
+        <!-- EMAIL -->
+
         <label>
+
             Email
 
             <input
@@ -1125,10 +1847,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 value="<?= e($old['email']) ?>"
                 required
             >
+
         </label>
 
 
+        <!-- MESSAGE -->
+
         <label>
+
             Message
 
             <textarea
@@ -1140,9 +1866,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </label>
 
 
-        <button class="btn" type="submit">
+        <!-- BOUTON -->
+
+        <button
+            class="btn"
+            type="submit"
+        >
             Envoyer le message
         </button>
+
 
     </form>
 
@@ -1159,30 +1891,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <footer class="wrap">
 
+
     <p>
-        &copy; <?= date('Y') ?>
+
+        &copy;
+        <?= date('Y') ?>
+
         <?= e($site['name']) ?>
+
     </p>
 
 
     <p>
 
-        <?php foreach ($site['socials'] as $label => $url): ?>
+
+        <?php foreach (
+            $site['socials']
+            as $label => $url
+        ): ?>
+
 
             <a
                 href="<?= e($url) ?>"
                 target="_blank"
                 rel="noopener"
             >
+
                 <?= e($label) ?>
+
             </a>
+
 
         <?php endforeach; ?>
 
+
     </p>
+
 
 </footer>
 
 
 </body>
+
 </html>
