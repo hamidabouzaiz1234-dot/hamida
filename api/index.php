@@ -18,6 +18,7 @@ $ateliers = [
         "description" => "Découverte des étapes de la méthode en cascade : analyse, conception, développement, tests et maintenance.",
         "dossier" => "atelier1",
         "icone" => "↘",
+        "link"=>"at1.pdf",
         "couleur" => "sage"
     ],
     [
@@ -25,6 +26,7 @@ $ateliers = [
         "titre" => "Gestion de projet agile",
         "description" => "Organisation du travail en équipe, planification agile, user stories et suivi des tâches.",
         "dossier" => "atelier2",
+        "link"=>"at1.pdf",
         "icone" => "✳",
         "couleur" => "rose"
     ],
@@ -33,6 +35,7 @@ $ateliers = [
         "titre" => "Atelier pratique Git N° 1",
         "description" => "Initiation à Git, gestion des versions, commits et collaboration autour d'un projet.",
         "dossier" => "atelier3",
+        "link"=>"at1.pdf",
         "icone" => "⌘",
         "couleur" => "blue"
     ]
@@ -1038,7 +1041,7 @@ function e($valeur) {
                         <p><?= e($atelier["description"]) ?></p>
 
                         <a class="card-link"
-                           href="<?= e($atelier["dossier"]) ?>/index.php">
+                           href="/docs/<?= e($atelier["dossier"])."/".e($atelier["link"]) ?>">
                             Voir l'atelier →
                         </a>
 
