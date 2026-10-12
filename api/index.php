@@ -936,7 +936,13 @@ function e($valeur) {
                     <?php else: ?>
 
                         <div class="portrait-placeholder">
-                            <div class="avatar-icon">✿</div>
+                            <div class="avatar-icon">
+
+<img src="/images/pic1.jpg" alt="">
+
+
+
+                            </div>
                             <strong>Votre photo ici</strong>
                             <small>
                                 Ajoutez votre image :<br>
