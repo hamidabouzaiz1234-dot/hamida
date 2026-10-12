@@ -6,7 +6,7 @@ session_start();
  */
 
 $nom = "Hamida Bouzaiz";
-$photo = "public/images/photo.jpg";
+$photo = "/images/pic1.jpg";
 $logo = "public/images/logo.png";
 $linkedin = "https://www.linkedin.com/";
 
@@ -938,7 +938,7 @@ function e($valeur) {
                         <div class="portrait-placeholder">
                             <div class="avatar-icon">
 
-<img src="/images/pic1.jpg" alt="">
+                              
 
 
 
