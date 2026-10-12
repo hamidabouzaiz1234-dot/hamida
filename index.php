@@ -1039,7 +1039,7 @@ function e($valeur) {
 
                         <a class="card-link"
                            href="<?= e($atelier["dossier"]) ?>/photo1.jpg">
-                            Voir l'atelier →
+                            Voir l'atelierrrrrrrrrrr →
                         </a>
 
                     </article>
