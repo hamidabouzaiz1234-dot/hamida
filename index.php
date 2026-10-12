@@ -1038,7 +1038,7 @@ function e($valeur) {
                         <p><?= e($atelier["description"]) ?></p>
 
                         <a class="card-link"
-                           href="<?= e($atelier["dossier"]) ?>/index.php">
+                           href="<?= e($atelier["dossier"]) ?>/photo1.jpg">
                             Voir l'atelier →
                         </a>
 
