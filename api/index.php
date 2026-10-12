@@ -883,7 +883,7 @@ function e($valeur) {
                     Portfolio étudiant · 2026
                 </div>
 
-                <h1>Bonjour, je suis <span>Hamida.</span></h1>
+                <h1>Bonjour, je suis <span>Hamida</span></h1>
 
                 <p class="hero-description">
                     Stagiaire à l'ISTIA NTIC Tanger, en deuxième année
