@@ -928,12 +928,12 @@ function e($valeur) {
                 <div class="portrait-backdrop"></div>
 
                 <div class="portrait">
-                    <?php if (is_file(__DIR__ . "/" . $photo)): ?>
+                   
 
                         <img src="<?= e($photo) ?>"
                              alt="Photo de Hamida Bouzaiz">
 
-                    <?php else: ?>
+                    
 
                         <div class="portrait-placeholder">
                             <div class="avatar-icon">
@@ -950,7 +950,6 @@ function e($valeur) {
                             </small>
                         </div>
 
-                    <?php endif; ?>
                 </div>
 
                 <div class="floating-note">
