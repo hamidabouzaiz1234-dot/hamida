@@ -1,271 +1,124 @@
 <?php
-declare(strict_types=1);
 session_start();
 
-/* =====================================================
-   1. CONFIGURATION
-===================================================== */
+/*
+ * Portfolio professionnel de Hamida Bouzaiz
+ */
 
-$site = [
-    'name' => 'Hamida Bouzaiz',
-    'role' => 'Stagiaire Full Stack',
-    'school' => 'ISTA NTIC Tanger · 2ème année',
+$nom = "Hamida Bouzaiz";
+$photo = "public/images/photo.jpg";
+$logo = "public/images/logo.png";
+$linkedin = "https://www.linkedin.com/";
 
-    // Remplace par ton véritable email
-    'email' => 'ton@email.com',
-
-    'tagline' => "Stagiaire en développement Full Stack à l'ISTA NTIC Tanger. Je construis des applications web complètes, du back-end à l'interface.",
-
-    'about' => "Actuellement en 2ème année de la filière Développement Digital option Web Full Stack à l'ISTA NTIC Tanger. Je suis motivée, curieuse et j'apprends en pratiquant : ateliers, projets de groupe et projets personnels.",
-
-    /* COMPÉTENCES */
-    'skills' => [
-        'HTML5',
-        'CSS3',
-        'JavaScript',
-        'PHP',
-        'MySQL',
-        'Laravel',
-        'Bootstrap',
-        'Git / GitHub'
+// Les trois ateliers
+$ateliers = [
+    [
+        "numero" => "01",
+        "titre" => "Méthode classique en cascade",
+        "description" => "Découverte des étapes de la méthode en cascade : analyse, conception, développement, tests et maintenance.",
+        "dossier" => "atelier1",
+        "icone" => "↘",
+        "couleur" => "sage"
     ],
-
-    /* =================================================
-       ATELIERS
-       Sur Vercel, le dossier public/ est servi depuis la
-       racine : donc le chemin est /images/... (sans public/)
-    ================================================= */
-    'ateliers' => [
-
-        [
-            'id' => 'atelier-1',
-            'title' => 'Atelier 1 : Gestion de projet',
-            'subtitle' => 'Méthode classique',
-            'date' => '28/09/2026',
-            'desc' => "Découverte des méthodes classiques de gestion de projet.",
-            'img' => '/images/atelier1/cover.jpg',
-            'photos' => [
-                '/images/atelier1/photo1.jpg',
-                '/images/atelier1/photo2.jpg',
-            ],
-            'tags' => ['Gestion de projet', 'Méthode classique']
-        ],
-
-        [
-            'id' => 'atelier-2',
-            'title' => 'Atelier 2 : Gestion de projet Agile',
-            'subtitle' => 'Modèle Agile · Scrum',
-            'date' => '2026',
-            'desc' => "Mise en pratique de la méthode Agile avec le framework Scrum.",
-            'img' => '/images/atelier2/cover.jpg',
-            'photos' => [
-                '/images/atelier2/photo1.jpg',
-                '/images/atelier2/photo2.jpg',
-            ],
-            'tags' => ['Agile', 'Scrum']
-        ],
-
-        [
-            'title' => 'Atelier 3 : Développement web',
-            'date' => '2025',
-            'desc' => "Réalisation d'un atelier pratique en développement web.",
-            'tags' => ['Développement web', 'Pratique']
-        ],
-
-        [
-            'title' => 'Atelier 4 : Développement web',
-            'date' => '2026',
-            'desc' => "Mise en pratique des connaissances acquises en développement web.",
-            'tags' => ['HTML', 'CSS', 'JavaScript']
-        ],
-
-        [
-            'title' => 'Atelier 5 : Base de données',
-            'date' => '2026',
-            'desc' => "Travail pratique autour de la conception et de la gestion des bases de données.",
-            'tags' => ['MySQL', 'Base de données']
-        ],
-
-        [
-            'title' => 'Atelier 6 : Projet pratique',
-            'date' => '2026',
-            'desc' => "Réalisation d'un projet pratique permettant de mettre en application les compétences acquises.",
-            'tags' => ['Projet', 'Pratique']
-        ]
-
+    [
+        "numero" => "02",
+        "titre" => "Gestion de projet agile",
+        "description" => "Organisation du travail en équipe, planification agile, user stories et suivi des tâches.",
+        "dossier" => "atelier2",
+        "icone" => "✳",
+        "couleur" => "rose"
     ],
-
-    /* =================================================
-       PROJETS
-    ================================================= */
-    'projects' => [
-
-        [
-            'title' => 'VENDO',
-            'desc' => "VENDO est une plateforme web de petites annonces permettant aux utilisateurs de publier et de consulter des annonces.",
-            'stack' => ['HTML', 'CSS', 'PHP', 'MySQL'],
-            'url' => '#',
-            'code' => '#'
-        ]
-
-    ],
-
-    /* =================================================
-       RÉSEAUX SOCIAUX
-    ================================================= */
-    'socials' => [
-        'GitHub' => '#',
-        'LinkedIn' => '#'
+    [
+        "numero" => "03",
+        "titre" => "Atelier pratique Git N° 1",
+        "description" => "Initiation à Git, gestion des versions, commits et collaboration autour d'un projet.",
+        "dossier" => "atelier3",
+        "icone" => "⌘",
+        "couleur" => "blue"
     ]
 ];
 
+$envoye = false;
+$erreurs = [];
+$nomContact = "";
+$emailContact = "";
+$messageContact = "";
 
-/* =====================================================
-   2. FONCTION DE SÉCURITÉ
-===================================================== */
+if ($_SERVER["REQUEST_METHOD"] === "POST"
+    && isset($_POST["contact_submit"])) {
 
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-}
+    $nomContact = trim($_POST["nom"] ?? "");
+    $emailContact = trim($_POST["email"] ?? "");
+    $messageContact = trim($_POST["message"] ?? "");
 
-
-/* =====================================================
-   3. FORMULAIRE DE CONTACT
-===================================================== */
-
-$flash = null;
-
-$old = [
-    'name' => '',
-    'email' => '',
-    'message' => ''
-];
-
-/* Création du token CSRF */
-if (empty($_SESSION['csrf'])) {
-    $_SESSION['csrf'] = bin2hex(random_bytes(16));
-}
-
-/* Traitement du formulaire */
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $old = [
-        'name' => trim($_POST['name'] ?? ''),
-        'email' => trim($_POST['email'] ?? ''),
-        'message' => trim($_POST['message'] ?? '')
-    ];
-
-    /* Vérification CSRF */
-    if (
-        !isset($_POST['csrf']) ||
-        !is_string($_POST['csrf']) ||
-        !hash_equals($_SESSION['csrf'], $_POST['csrf'])
-    ) {
-        $flash = ['error', 'Session expirée. Recharge la page et réessaie.'];
+    if ($nomContact === "") {
+        $erreurs[] = "Veuillez saisir votre nom.";
     }
 
-    /* Protection anti-spam */
-    elseif (!empty($_POST['website'])) {
-        $flash = ['ok', 'Message envoyé.'];
+    if (!filter_var($emailContact, FILTER_VALIDATE_EMAIL)) {
+        $erreurs[] = "Veuillez saisir une adresse e-mail valide.";
     }
 
-    /* Validation */
-    elseif (
-        $old['name'] === '' ||
-        $old['message'] === '' ||
-        !filter_var($old['email'], FILTER_VALIDATE_EMAIL)
-    ) {
-        $flash = ['error', 'Remplis tous les champs avec une adresse email valide.'];
+    if ($messageContact === "") {
+        $erreurs[] = "Veuillez écrire votre message.";
     }
 
-    /* Envoi du message */
-    else {
-
-        $name = str_replace(["\r", "\n"], '', $old['name']);
-
-        $subject = 'Portfolio : message de ' . $name;
-
-        $headers =
-            'From: ' . $site['email'] . "\r\n" .
-            'Reply-To: ' . $old['email'] . "\r\n" .
-            'Content-Type: text/plain; charset=UTF-8';
-
-        if (@mail($site['email'], $subject, $old['message'], $headers)) {
-
-            $flash = ['ok', 'Message envoyé. Je te réponds rapidement.'];
-
-            $old = ['name' => '', 'email' => '', 'message' => ''];
-
-        } else {
-
-            $flash = [
-                'error',
-                "L'envoi a échoué. Écris-moi directement à " . $site['email'] . '.'
-            ];
-        }
+    if (empty($erreurs)) {
+        $envoye = true;
     }
 }
 
+function e($valeur) {
+    return htmlspecialchars(
+        (string)$valeur,
+        ENT_QUOTES,
+        "UTF-8"
+    );
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><?= e($site['name']) ?> — <?= e($site['role']) ?></title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta name="description" content="<?= e($site['tagline']) ?>">
+    <meta name="description"
+          content="Portfolio professionnel de Hamida Bouzaiz, stagiaire en Développement Digital Full Stack à l'ISTIA NTIC Tanger.">
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
-        rel="stylesheet"
-    >
+    <title>Hamida Bouzaiz | Portfolio</title>
 
     <style>
-
-        /* =====================================================
-           1. VARIABLES
-        ===================================================== */
-
         :root {
-            --bg: #0c1220;
-            --panel: #151d30;
-            --line: #26324d;
-            --text: #e8ecf5;
-            --muted: #8f9bb8;
-            --accent: #ffb454;
-            --accent-ink: #1a1204;
-            --ok: #5fd0a0;
-            --err: #ff7a7a;
+            --cream: #f8f3eb;
+            --beige: #eadbc8;
+            --beige-dark: #d7bea2;
+            --brown: #513a2c;
+            --brown-dark: #34241c;
+            --text: #3f332b;
+            --muted: #817266;
+            --white: #fffdf9;
+            --line: rgba(81, 58, 44, .15);
+            --shadow: 0 18px 50px rgba(70, 48, 33, .10);
+            --radius: 24px;
         }
-
-
-        /* =====================================================
-           2. RESET
-        ===================================================== */
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 4.5rem;
+            scroll-padding-top: 90px;
         }
 
         body {
-            background: var(--bg);
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--cream);
             color: var(--text);
-            font: 400 1rem/1.7 'Inter', system-ui, sans-serif;
+            line-height: 1.7;
         }
 
         a {
@@ -273,891 +126,1146 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-decoration: none;
         }
 
-        ul {
-            list-style: none;
+        img {
+            max-width: 100%;
+            display: block;
         }
 
-        :focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
+        .container {
+            width: min(1120px, calc(100% - 40px));
+            margin: auto;
         }
 
-
-        /* =====================================================
-           3. STRUCTURE
-        ===================================================== */
-
-        .wrap {
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .narrow {
-            max-width: 640px;
-        }
-
-        h1, h2, h3, .brand {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            line-height: 1.15;
-        }
-
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        section {
-            padding: 5rem 1.5rem 2rem;
-        }
-
-
-        /* =====================================================
-           4. NAVIGATION
-        ===================================================== */
-
-        .top {
+        .navbar {
             position: sticky;
             top: 0;
-            z-index: 10;
-            background: rgba(12, 18, 32, .88);
-            backdrop-filter: blur(8px);
+            z-index: 100;
+            background: rgba(248, 243, 235, .88);
+            backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--line);
         }
 
-        .top nav {
+        .nav-inner {
+            min-height: 76px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-block: 1rem;
+            justify-content: space-between;
+            gap: 20px;
         }
 
         .brand {
-            font-weight: 800;
-            font-size: 1.15rem;
-        }
-
-        .top ul {
             display: flex;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 40px;
+            height: 40px;
+            background: var(--brown);
+            color: var(--cream);
+            border-radius: 14px;
+            font-family: Georgia, serif;
+            font-size: 21px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 650;
             color: var(--muted);
-            font-size: .95rem;
+            transition: color .25s ease;
         }
 
-        .top ul a:hover {
-            color: var(--text);
+        .nav-links a:hover {
+            color: var(--brown-dark);
         }
 
+        .nav-links .nav-cta {
+            color: var(--cream);
+            background: var(--brown);
+            padding: 11px 18px;
+            border-radius: 999px;
+        }
 
-        /* =====================================================
-           5. HERO
-        ===================================================== */
+        .menu-toggle {
+            display: none;
+            border: 1px solid var(--line);
+            color: var(--brown);
+            background: var(--white);
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
 
         .hero {
+            padding: 82px 0 74px;
+            overflow: hidden;
+        }
+
+        .hero-grid {
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1.15fr .85fr;
             align-items: center;
-            min-height: calc(100vh - 4rem);
+            gap: 64px;
         }
 
-        .school {
-            font: 500 .85rem 'JetBrains Mono', monospace;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.6rem);
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--brown);
+            background: #efe3d3;
+            border: 1px solid #e5d2bc;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
             font-weight: 800;
-            letter-spacing: -.02em;
         }
 
-        .lead {
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            background: #78916b;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(46px, 6vw, 76px);
+            line-height: 1.04;
+            letter-spacing: -2.8px;
+            color: var(--brown-dark);
+            margin: 24px 0 20px;
+        }
+
+        h1 span {
+            color: #a47b58;
+            font-style: italic;
+        }
+
+        .hero-description {
+            max-width: 610px;
             color: var(--muted);
-            font-size: 1.1rem;
-            max-width: 34rem;
-            margin: 1.25rem 0 2rem;
+            font-size: 17px;
         }
 
-        .actions {
+        .hero-actions {
             display: flex;
-            gap: .8rem;
             flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 30px;
         }
 
         .btn {
-            display: inline-block;
-            padding: .75rem 1.5rem;
-            border-radius: 6px;
-            border: 1px solid var(--accent);
-            background: var(--accent);
-            color: var(--accent-ink);
-            font: 700 .95rem 'Inter', sans-serif;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 13px 21px;
+            font-weight: 750;
+            font-size: 14px;
             cursor: pointer;
-            transition: transform .15s;
+            transition: transform .25s, box-shadow .25s;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(81, 58, 44, .15);
         }
 
-        .btn.ghost {
+        .btn-primary {
+            background: var(--brown);
+            color: white;
+        }
+
+        .btn-outline {
+            border-color: #cbb49b;
+            color: var(--brown);
             background: transparent;
-            color: var(--text);
-            border-color: var(--line);
         }
 
-
-        /* =====================================================
-           6. CODE CARD
-        ===================================================== */
-
-        .code {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 1.5rem;
-            overflow-x: auto;
-            font: 400 .9rem/1.8 'JetBrains Mono', monospace;
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 35px;
+            padding-top: 22px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 13px;
         }
 
-        .code .c { color: #62708f; }
-        .code .k { color: var(--accent); }
-        .code .s { color: #8fc7ff; }
-        .code .v { color: var(--ok); }
+        .hero-meta strong {
+            color: var(--brown);
+            display: block;
+            font-size: 14px;
+        }
 
+        .portrait-wrap {
+            position: relative;
+            max-width: 390px;
+            margin: auto;
+            width: 100%;
+        }
 
-        /* =====================================================
-           7. ABOUT
-        ===================================================== */
+        .portrait-backdrop {
+            position: absolute;
+            inset: 18px -16px -16px 18px;
+            border-radius: 48% 48% 28px 28px;
+            background: #e6d1b9;
+            transform: rotate(4deg);
+        }
+
+        .portrait {
+            position: relative;
+            min-height: 450px;
+            border-radius: 48% 48% 28px 28px;
+            overflow: hidden;
+            background: linear-gradient(145deg, #dfc7ad, #f2e7d8);
+            border: 8px solid rgba(255, 253, 249, .7);
+            box-shadow: var(--shadow);
+            display: grid;
+            place-items: center;
+        }
+
+        .portrait img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .portrait-placeholder {
+            padding: 30px;
+            text-align: center;
+            color: var(--brown);
+        }
+
+        .portrait-placeholder .avatar-icon {
+            font-size: 58px;
+        }
+
+        .portrait-placeholder strong {
+            display: block;
+            font-family: Georgia, serif;
+            font-size: 25px;
+        }
+
+        .portrait-placeholder small {
+            color: #786451;
+        }
+
+        .floating-note {
+            position: absolute;
+            bottom: 28px;
+            left: -35px;
+            background: var(--white);
+            padding: 15px 19px;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            font-size: 13px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-note strong {
+            display: block;
+            color: var(--brown);
+            font-size: 15px;
+        }
+
+        .floating-note span {
+            color: var(--muted);
+        }
+
+        section {
+            padding: 78px 0;
+        }
+
+        .section-heading {
+            max-width: 660px;
+            margin-bottom: 36px;
+        }
+
+        .section-kicker {
+            color: #9b7553;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 850;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--brown-dark);
+            font-size: clamp(34px, 4vw, 48px);
+            line-height: 1.15;
+            margin-bottom: 14px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            margin-bottom: 0;
+        }
 
         .about {
+            background: var(--white);
+        }
+
+        .about-grid {
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 2.5rem;
+            grid-template-columns: .75fr 1.25fr;
+            gap: 55px;
             align-items: start;
         }
 
-        .about p {
-            color: var(--muted);
-            max-width: 38rem;
+        .about-label {
+            background: var(--beige);
+            border-radius: var(--radius);
+            padding: 28px;
         }
 
-        .skills {
+        .about-label .big-number {
+            font-family: Georgia, serif;
+            font-size: 52px;
+            color: var(--brown);
+            line-height: 1;
+        }
+
+        .about-label p,
+        .about-copy {
+            color: var(--muted);
+        }
+
+        .skill-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: .5rem;
+            gap: 9px;
+            margin-top: 22px;
         }
 
-        .skills li,
-        .tags li {
-            font: 500 .8rem 'JetBrains Mono', monospace;
-            padding: .3rem .7rem;
+        .skill-tags span {
+            background: var(--cream);
             border: 1px solid var(--line);
-            border-radius: 4px;
+            color: var(--brown);
+            padding: 8px 13px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-
-        /* =====================================================
-           8. ATELIERS
-        ===================================================== */
-
-        .ateliers {
+        .atelier-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
 
-        .atelier {
-            position: relative;
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            overflow: hidden;
-            padding: 0;
-            transition: transform .2s, border-color .2s, box-shadow .2s;
-        }
-
-        .atelier:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
-        }
-
-        .atelier::before {
-            display: none;
-        }
-
-        /* Toute la carte devient cliquable */
-        .atelier.clickable {
-            cursor: pointer;
-        }
-
-        .atelier-link::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-        }
-
-        .atelier-more {
-            display: inline-block;
-            margin-top: .9rem;
-            color: var(--accent);
-            font-weight: 500;
-            font-size: .9rem;
-        }
-
-        /* Image de chaque atelier */
-        .atelier-image {
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
-            background: var(--bg);
-        }
-
-        .atelier-image img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            margin: 0;
-            border: 0;
-            border-radius: 0;
-            transition: transform .3s;
-        }
-
-        .atelier:hover .atelier-image img {
-            transform: scale(1.04);
-        }
-
-        /* Contenu */
-        .atelier-content {
-            padding: 1.3rem;
-        }
-
-        .atelier time {
-            font: 500 .8rem 'JetBrains Mono', monospace;
-            color: var(--accent);
-        }
-
-        .atelier h3 {
-            font-size: 1.2rem;
-            margin: .35rem 0 .55rem;
-        }
-
-        .atelier p {
-            color: var(--muted);
-            font-size: .95rem;
-            margin-bottom: .9rem;
-        }
-
-
-        /* =====================================================
-           9. TAGS
-        ===================================================== */
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: .4rem;
-        }
-
-
-        /* =====================================================
-           10. BOUTONS PHOTOS
-        ===================================================== */
-
-        .photos-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: .8rem;
-            margin-top: 1.5rem;
-        }
-
-
-        /* =====================================================
-           11. GALERIES PHOTOS
-        ===================================================== */
-
-        .atelier-photos {
-            margin-top: 4rem;
-            scroll-margin-top: 5rem;
-        }
-
-        .atelier-photos h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .photos-sub {
-            color: var(--muted);
-            margin: -.8rem 0 1.2rem;
-            font-size: .95rem;
-        }
-
-        .photos-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .photo-item {
-            display: block;
-            overflow: hidden;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel);
-        }
-
-        .photo-item img {
-            display: block;
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-            transition: transform .3s;
-        }
-
-        .photo-item:hover img {
-            transform: scale(1.04);
-        }
-
-
-        /* =====================================================
-           12. PROJECTS
-        ===================================================== */
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 1.5rem;
+        .atelier-card {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            transition: transform .2s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
-
-        .card h3 {
-            font-size: 1.3rem;
-        }
-
-        .card > p {
-            color: var(--muted);
-            font-size: .95rem;
-        }
-
-        .card .tags {
-            margin-top: auto;
-        }
-
-        .links {
-            display: flex;
-            gap: 1.2rem;
-            font-weight: 500;
-        }
-
-        .links a {
-            color: var(--accent);
-            border-bottom: 1px solid transparent;
-        }
-
-        .links a:hover {
-            border-color: var(--accent);
-        }
-
-
-        /* =====================================================
-           13. CONTACT
-        ===================================================== */
-
-        form {
-            display: grid;
-            gap: 1.1rem;
-        }
-
-        label {
-            display: grid;
-            gap: .4rem;
-            color: var(--muted);
-            font-size: .9rem;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: .8rem .9rem;
-            background: var(--panel);
+            min-height: 330px;
+            background: var(--white);
             border: 1px solid var(--line);
-            border-radius: 6px;
-            color: var(--text);
-            font: inherit;
+            border-radius: var(--radius);
+            padding: 25px;
+            transition: transform .3s, box-shadow .3s;
         }
 
-        input:focus,
-        textarea:focus {
+        .atelier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .card-number {
+            color: #a28a74;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: 1.5px;
+        }
+
+        .card-icon {
+            display: grid;
+            place-items: center;
+            width: 49px;
+            height: 49px;
+            border-radius: 16px;
+            font-size: 25px;
+            color: var(--brown);
+        }
+
+        .sage .card-icon { background: #e3e9dc; }
+        .rose .card-icon { background: #f2e1dc; }
+        .blue .card-icon { background: #dfe8ef; }
+
+        .atelier-card h3 {
+            font-family: Georgia, serif;
+            font-size: 24px;
+            line-height: 1.25;
+            color: var(--brown-dark);
+            margin-bottom: 12px;
+        }
+
+        .atelier-card p {
+            color: var(--muted);
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 850;
+            margin-top: 15px;
+        }
+
+        .projects {
+            background: #efe4d6;
+        }
+
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .project-item {
+            background: rgba(255, 253, 249, .8);
+            border: 1px solid rgba(81, 58, 44, .12);
+            padding: 23px;
+            border-radius: 20px;
+        }
+
+        .project-symbol {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .project-item h3 {
+            color: var(--brown);
+            font-size: 17px;
+        }
+
+        .project-item p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: .85fr 1.15fr;
+            gap: 55px;
+            align-items: start;
+        }
+
+        .contact-copy p {
+            color: var(--muted);
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 22px;
+            color: var(--brown);
+            font-weight: 700;
+        }
+
+        .detail-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            background: var(--beige);
+            border-radius: 14px;
+        }
+
+        .contact-form {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        .field label {
+            display: block;
+            color: var(--brown);
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            border: 1px solid #e1d5c8;
+            background: #fdfaf6;
+            border-radius: 13px;
+            padding: 13px 14px;
             outline: none;
-            border-color: var(--accent);
+            color: var(--text);
         }
 
-        textarea {
+        .field input:focus,
+        .field textarea:focus {
+            border-color: #9b7553;
+            box-shadow: 0 0 0 3px rgba(155, 117, 83, .12);
+        }
+
+        .field textarea {
             resize: vertical;
+            min-height: 130px;
         }
 
-        .hp {
-            position: absolute;
-            left: -9999px;
+        .alert {
+            padding: 13px 15px;
+            border-radius: 12px;
+            margin-bottom: 17px;
+            font-size: 14px;
         }
 
-        .flash {
-            padding: .8rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 1.2rem;
-            border: 1px solid;
+        .alert-success {
+            background: #e5efdf;
+            color: #35552f;
         }
 
-        .flash.ok {
-            color: var(--ok);
-            border-color: var(--ok);
+        .alert-error {
+            background: #f7e4df;
+            color: #8b3024;
         }
 
-        .flash.error {
-            color: var(--err);
-            border-color: var(--err);
+        .form-note {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 12px 0 0;
         }
-
-
-        /* =====================================================
-           14. FOOTER
-        ===================================================== */
 
         footer {
+            background: var(--brown-dark);
+            color: #f8f3eb;
+            padding: 27px 0;
+        }
+
+        .footer-inner {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 5rem;
-            padding-block: 2rem;
-            border-top: 1px solid var(--line);
-            color: var(--muted);
-            font-size: .9rem;
+            align-items: center;
+            gap: 18px;
         }
 
-        footer a {
-            margin-left: 1rem;
+        .footer-inner p {
+            margin: 0;
+            font-size: 13px;
+            color: #d7c6b5;
         }
 
-        footer a:hover {
-            color: var(--text);
+        .footer-links {
+            display: flex;
+            gap: 18px;
+            font-size: 13px;
         }
 
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s, transform .7s;
+        }
 
-        /* =====================================================
-           15. RESPONSIVE
-        ===================================================== */
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        @media (max-width: 800px) {
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-9px); }
+        }
 
-            .hero,
-            .about,
-            .ateliers {
-                grid-template-columns: 1fr;
+        @media (max-width: 850px) {
+            .hero-grid {
+                grid-template-columns: 1.15fr .85fr;
+                gap: 30px;
             }
 
-            .photos-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .portrait,
+            .portrait img {
+                min-height: 350px;
+                height: 350px;
+            }
+
+            .atelier-grid,
+            .project-list {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .about-grid,
+            .contact-grid {
+                gap: 28px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                width: calc(100% - 28px);
+            }
+
+            .menu-toggle {
+                display: inline-flex;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                padding: 20px;
+                background: var(--cream);
+                border-bottom: 1px solid var(--line);
+                flex-direction: column;
+                align-items: stretch;
+                gap: 17px;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links .nav-cta {
+                text-align: center;
             }
 
             .hero {
-                min-height: auto;
-                padding-top: 3rem;
+                padding: 55px 0 50px;
             }
 
-            .top ul {
-                gap: .8rem;
-                font-size: .8rem;
-            }
-
-            .brand {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 500px) {
-
-            .top nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .top ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            section {
-                padding-top: 3rem;
-            }
-
-            h2 {
-                font-size: 1.7rem;
-            }
-
-            .photos-grid {
+            .hero-grid,
+            .about-grid,
+            .contact-grid {
                 grid-template-columns: 1fr;
             }
 
-            .atelier-image {
-                height: 200px;
+            .hero-grid {
+                gap: 45px;
+            }
+
+            h1 {
+                font-size: clamp(44px, 13vw, 64px);
+                letter-spacing: -1.8px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .portrait-wrap {
+                max-width: 320px;
+            }
+
+            .portrait,
+            .portrait img {
+                min-height: 350px;
+                height: 350px;
+            }
+
+            section {
+                padding: 58px 0;
+            }
+
+            .atelier-grid,
+            .project-list,
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .atelier-card {
+                min-height: 290px;
+            }
+
+            .contact-form {
+                padding: 21px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-
-            html {
-                scroll-behavior: auto;
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation: none !important;
+                transition: none !important;
             }
 
-            .btn,
-            .card,
-            .atelier,
-            .atelier-image img,
-            .photo-item img {
-                transition: none;
+            .reveal {
+                opacity: 1;
+                transform: none;
             }
         }
-
     </style>
-
 </head>
-
-
 <body>
 
-<!-- =====================================================
-     NAVIGATION
-===================================================== -->
+<header class="navbar">
+    <div class="container nav-inner">
 
-<header class="top">
-    <nav class="wrap">
+        <a class="brand" href="#accueil">
+            <?php if (is_file(__DIR__ . "/" . $logo)): ?>
+                <img src="<?= e($logo) ?>" alt="Logo"
+                     style="width:40px;height:40px;object-fit:contain">
+            <?php else: ?>
+                <span class="brand-mark">H.</span>
+            <?php endif; ?>
 
-        <a class="brand" href="#top"><?= e($site['name']) ?></a>
+            <span>Hamida <span style="color:#a47b58">Bouzaiz</span></span>
+        </a>
 
-        <ul>
-            <li><a href="#about">À propos</a></li>
-            <li><a href="#ateliers">Ateliers</a></li>
-            <li><a href="#projects">Projets</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+        <button class="menu-toggle" id="menuToggle"
+                aria-label="Ouvrir le menu"
+                aria-expanded="false">☰</button>
 
-    </nav>
+        <nav class="nav-links" id="navLinks">
+            <a href="#accueil">Accueil</a>
+            <a href="#apropos">À propos</a>
+            <a href="#ateliers">Mes ateliers</a>
+            <a href="#projets">Projets</a>
+            <a class="nav-cta" href="#contact">Me contacter ↗</a>
+        </nav>
+
+    </div>
 </header>
 
+<main>
 
-<main id="top">
+    <!-- PAGE D'ACCUEIL -->
+    <section class="hero" id="accueil">
+        <div class="container hero-grid">
 
-<!-- =====================================================
-     HERO
-===================================================== -->
-
-<section class="hero wrap">
-
-    <div>
-        <p class="school"><?= e($site['school']) ?></p>
-
-        <h1>Bonjour, je suis <?= e($site['name']) ?>.</h1>
-
-        <p class="lead"><?= e($site['tagline']) ?></p>
-
-        <p class="actions">
-            <a class="btn" href="#projects">Voir mes projets</a>
-            <a class="btn ghost" href="#contact">Me contacter</a>
-        </p>
-    </div>
-
-    <pre class="code" aria-label="Résumé du profil en code PHP"><code><span class="c">&lt;?php</span>
-<span class="k">$dev</span> = [
-  <span class="s">'nom'</span>    =&gt; <span class="v">'<?= e($site['name']) ?>'</span>,
-  <span class="s">'ecole'</span>  =&gt; <span class="v">'ISTA NTIC Tanger'</span>,
-  <span class="s">'stack'</span>  =&gt; [
-    <?php
-    $firstSkills = array_slice($site['skills'], 0, 3);
-
-    echo implode(
-        ",\n    ",
-        array_map(
-            fn($s) => '<span class="v">\'' . e($s) . '\'</span>',
-            $firstSkills
-        )
-    );
-    ?>
-
-  ],
-  <span class="s">'dispo'</span>  =&gt; <span class="v">true</span>,
-];</code></pre>
-
-</section>
-
-
-<!-- =====================================================
-     ABOUT
-===================================================== -->
-
-<section id="about" class="wrap">
-
-    <h2>À propos</h2>
-
-    <div class="about">
-
-        <p><?= e($site['about']) ?></p>
-
-        <ul class="skills">
-            <?php foreach ($site['skills'] as $skill): ?>
-                <li><?= e($skill) ?></li>
-            <?php endforeach; ?>
-        </ul>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     ATELIERS
-===================================================== -->
-
-<section id="ateliers" class="wrap">
-
-    <h2>Ateliers</h2>
-
-    <!-- LES 6 ATELIERS -->
-    <div class="ateliers">
-
-        <?php foreach ($site['ateliers'] as $a): ?>
-            <?php $hasPhotos = !empty($a['photos']); ?>
-
-            <article class="atelier<?= $hasPhotos ? ' clickable' : '' ?>">
-
-                <!-- IMAGE -->
-                <?php if (!empty($a['img'])): ?>
-                    <div class="atelier-image">
-                        <img
-                            src="<?= e($a['img']) ?>"
-                            alt="<?= e($a['title']) ?>"
-                            loading="lazy"
-                        >
-                    </div>
-                <?php endif; ?>
-
-                <!-- INFORMATIONS -->
-                <div class="atelier-content">
-
-                    <time><?= e($a['date']) ?></time>
-
-                    <h3>
-                        <?php if ($hasPhotos): ?>
-                            <a class="atelier-link" href="#photos-<?= e($a['id']) ?>">
-                                <?= e($a['title']) ?>
-                            </a>
-                        <?php else: ?>
-                            <?= e($a['title']) ?>
-                        <?php endif; ?>
-                    </h3>
-
-                    <p><?= e($a['desc']) ?></p>
-
-                    <!-- TAGS -->
-                    <?php if (!empty($a['tags'])): ?>
-                        <ul class="tags">
-                            <?php foreach ($a['tags'] as $t): ?>
-                                <li><?= e($t) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-
-                    <?php if ($hasPhotos): ?>
-                        <span class="atelier-more">📸 Voir les photos →</span>
-                    <?php endif; ?>
-
+            <div class="reveal">
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Portfolio étudiant · 2026
                 </div>
 
-            </article>
+                <h1>Bonjour, je suis <span>Hamida.</span></h1>
 
-        <?php endforeach; ?>
+                <p class="hero-description">
+                    Stagiaire à l'ISTIA NTIC Tanger, en deuxième année
+                    de formation en
+                    <strong>Développement Digital, option Full Stack</strong>.
+                    Je construis mes compétences à travers des ateliers
+                    pratiques, des projets et l'apprentissage continu.
+                </p>
 
-    </div>
-
-
-    <!-- BOUTONS VERS LES GALERIES -->
-    <div class="photos-buttons">
-        <?php foreach ($site['ateliers'] as $a): ?>
-            <?php if (!empty($a['photos'])): ?>
-                <a class="btn photos-button" href="#photos-<?= e($a['id']) ?>">
-                    📸 <?= e($a['subtitle']) ?>
-                </a>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
-
-
-    <!-- GALERIES : une par atelier -->
-    <?php foreach ($site['ateliers'] as $a): ?>
-        <?php if (empty($a['photos'])) continue; ?>
-
-        <div id="photos-<?= e($a['id']) ?>" class="atelier-photos">
-
-            <h3><?= e($a['title']) ?></h3>
-            <p class="photos-sub"><?= e($a['subtitle']) ?></p>
-
-            <div class="photos-grid">
-                <?php foreach ($a['photos'] as $i => $src): ?>
-                    <a
-                        class="photo-item"
-                        href="<?= e($src) ?>"
-                        target="_blank"
-                        rel="noopener"
-                    >
-                        <img
-                            src="<?= e($src) ?>"
-                            alt="<?= e($a['title']) ?> - photo <?= $i + 1 ?>"
-                            loading="lazy"
-                        >
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="#ateliers">
+                        Découvrir mes ateliers ↘
                     </a>
-                <?php endforeach; ?>
+
+                    <a class="btn btn-outline" href="#contact">
+                        Me contacter ↗
+                    </a>
+                </div>
+
+                <div class="hero-meta">
+                    <div>
+                        <strong>ISTIA NTIC</strong>
+                        Tanger, Maroc
+                    </div>
+
+                    <div>
+                        <strong>2ème année</strong>
+                        Développement Digital
+                    </div>
+
+                    <div>
+                        <strong>Full Stack</strong>
+                        Formation professionnelle
+                    </div>
+                </div>
+            </div>
+
+            <div class="portrait-wrap reveal">
+                <div class="portrait-backdrop"></div>
+
+                <div class="portrait">
+                    <?php if (is_file(__DIR__ . "/" . $photo)): ?>
+
+                        <img src="<?= e($photo) ?>"
+                             alt="Photo de Hamida Bouzaiz">
+
+                    <?php else: ?>
+
+                        <div class="portrait-placeholder">
+                            <div class="avatar-icon">✿</div>
+                            <strong>Votre photo ici</strong>
+                            <small>
+                                Ajoutez votre image :<br>
+                                public/images/photo.jpg
+                            </small>
+                        </div>
+
+                    <?php endif; ?>
+                </div>
+
+                <div class="floating-note">
+                    <strong>En formation ✨</strong>
+                    <span>Apprendre · Créer · Évoluer</span>
+                </div>
             </div>
 
         </div>
-    <?php endforeach; ?>
+    </section>
 
-</section>
+    <!-- À PROPOS -->
+    <section class="about" id="apropos">
+        <div class="container about-grid">
 
+            <div class="about-label reveal">
+                <div class="big-number">
+                    01<span style="color:#a47b58">.</span>
+                </div>
 
-<!-- =====================================================
-     PROJECTS
-===================================================== -->
+                <h3>À propos de moi</h3>
 
-<section id="projects" class="wrap">
+                <p>
+                    Un parcours construit autour de la curiosité,
+                    de la pratique et de la progression.
+                </p>
+            </div>
 
-    <h2>Projets</h2>
+            <div class="about-copy reveal">
+                <div class="section-kicker">Qui suis-je ?</div>
 
-    <div class="grid">
+                <h2>Apprendre aujourd'hui, construire demain.</h2>
 
-        <?php foreach ($site['projects'] as $p): ?>
-
-            <article class="card">
-
-                <h3><?= e($p['title']) ?></h3>
-
-                <p><?= e($p['desc']) ?></p>
-
-                <ul class="tags">
-                    <?php foreach ($p['stack'] as $t): ?>
-                        <li><?= e($t) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-
-                <p class="links">
-
-                    <?php if (!empty($p['url']) && $p['url'] !== '#'): ?>
-                        <a href="<?= e($p['url']) ?>" target="_blank" rel="noopener">Démo</a>
-                    <?php endif; ?>
-
-                    <?php if (!empty($p['code']) && $p['code'] !== '#'): ?>
-                        <a href="<?= e($p['code']) ?>" target="_blank" rel="noopener">Code source</a>
-                    <?php endif; ?>
-
+                <p>
+                    Je m'appelle Hamida Bouzaiz et je suis stagiaire
+                    à l'ISTIA NTIC Tanger. En deuxième année de
+                    Développement Digital, option Full Stack, je
+                    m'intéresse à la création de sites web, à la
+                    gestion de projet et aux outils qui facilitent
+                    le travail en équipe.
                 </p>
 
-            </article>
+                <p>
+                    Ce portfolio rassemble mes ateliers et mes
+                    réalisations. Il représente mon évolution,
+                    les compétences que je développe et les projets
+                    que je souhaite partager.
+                </p>
 
-        <?php endforeach; ?>
+                <div class="skill-tags">
+                    <span>Développement web</span>
+                    <span>HTML & CSS</span>
+                    <span>PHP</span>
+                    <span>Gestion de projet</span>
+                    <span>Méthode agile</span>
+                    <span>Git</span>
+                </div>
+            </div>
 
-    </div>
+        </div>
+    </section>
 
-</section>
+    <!-- LES ATELIERS -->
+    <section id="ateliers">
+        <div class="container">
 
+            <div class="section-heading reveal">
+                <div class="section-kicker">Mon parcours pratique</div>
+                <h2>Mes ateliers</h2>
+                <p>
+                    Découvrez les ateliers réalisés pendant ma formation
+                    et consultez les supports et projets associés.
+                </p>
+            </div>
 
-<!-- =====================================================
-     CONTACT
-===================================================== -->
+            <div class="atelier-grid">
 
-<section id="contact" class="wrap narrow">
+                <?php foreach ($ateliers as $atelier): ?>
 
-    <h2>Contact</h2>
+                    <article class="atelier-card <?= e($atelier["couleur"]) ?> reveal">
 
-    <?php if ($flash): ?>
-        <p class="flash <?= e($flash[0]) ?>" role="status">
-            <?= e($flash[1]) ?>
-        </p>
-    <?php endif; ?>
+                        <div class="card-top">
+                            <span class="card-number">
+                                ATELIER <?= e($atelier["numero"]) ?>
+                            </span>
 
-    <form method="post" action="#contact">
+                            <span class="card-icon">
+                                <?= e($atelier["icone"]) ?>
+                            </span>
+                        </div>
 
-        <!-- CSRF -->
-        <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
+                        <h3><?= e($atelier["titre"]) ?></h3>
 
-        <!-- Anti-spam -->
-        <input
-            type="text"
-            name="website"
-            class="hp"
-            tabindex="-1"
-            autocomplete="off"
-            aria-hidden="true"
-        >
+                        <p><?= e($atelier["description"]) ?></p>
 
-        <label>
-            Nom
-            <input type="text" name="name" value="<?= e($old['name']) ?>" required>
-        </label>
+                        <a class="card-link"
+                           href="<?= e($atelier["dossier"]) ?>/index.php">
+                            Voir l'atelier →
+                        </a>
 
-        <label>
-            Email
-            <input type="email" name="email" value="<?= e($old['email']) ?>" required>
-        </label>
+                    </article>
 
-        <label>
-            Message
-            <textarea name="message" rows="5" required><?= e($old['message']) ?></textarea>
-        </label>
+                <?php endforeach; ?>
 
-        <button class="btn" type="submit">Envoyer le message</button>
+            </div>
+        </div>
+    </section>
 
-    </form>
+    <!-- PROJETS -->
+    <section class="projects" id="projets">
+        <div class="container">
 
-</section>
+            <div class="section-heading reveal">
+                <div class="section-kicker">Travaux & réalisations</div>
+                <h2>Quelques projets à découvrir</h2>
+                <p>
+                    Retrouvez ici les ateliers et les réalisations
+                    effectuées pendant votre formation.
+                </p>
+            </div>
+
+            <div class="project-list">
+
+                <article class="project-item reveal">
+                    <div class="project-symbol">↘</div>
+                    <h3>Méthode en cascade</h3>
+                    <p>Supports, étapes et documents de l'atelier classique.</p>
+                    <a class="card-link" href="atelier1/index.php">
+                        Consulter →
+                    </a>
+                </article>
+
+                <article class="project-item reveal">
+                    <div class="project-symbol">✳</div>
+                    <h3>Gestion agile</h3>
+                    <p>Organisation du projet, user stories et planification du sprint.</p>
+                    <a class="card-link" href="atelier2/index.php">
+                        Consulter →
+                    </a>
+                </article>
+
+                <article class="project-item reveal">
+                    <div class="project-symbol">⌘</div>
+                    <h3>Pratique Git</h3>
+                    <p>Exercices et exemples liés à la gestion des versions.</p>
+                    <a class="card-link" href="atelier3/index.php">
+                        Consulter →
+                    </a>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="container contact-grid">
+
+            <div class="contact-copy reveal">
+                <div class="section-kicker">Restons en contact</div>
+
+                <h2>Un projet ou une question ?</h2>
+
+                <p>
+                    Vous pouvez m'écrire à l'aide du formulaire.
+                    Je serai ravie d'échanger avec vous autour
+                    de mes projets et de mon parcours.
+                </p>
+
+                <a class="contact-detail"
+                   href="<?= e($linkedin) ?>"
+                   target="_blank"
+                   rel="noopener noreferrer">
+
+                    <span class="detail-icon">in</span>
+                    <span>Retrouvez-moi sur LinkedIn ↗</span>
+                </a>
+
+                <div class="contact-detail">
+                    <span class="detail-icon">⌖</span>
+                    <span>Tanger, Maroc</span>
+                </div>
+            </div>
+
+            <form class="contact-form reveal"
+                  method="post"
+                  action="#contact">
+
+                <?php if ($envoye): ?>
+                    <div class="alert alert-success" role="status">
+                        Merci <?= e($nomContact) ?> !
+                        Le formulaire a bien été validé.
+                        <br>
+                        Attention : cette version ne transmet pas
+                        encore le message par e-mail.
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($erreurs)): ?>
+                    <div class="alert alert-error" role="alert">
+                        <?php foreach ($erreurs as $erreur): ?>
+                            <div><?= e($erreur) ?></div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <div class="form-row">
+
+                    <div class="field">
+                        <label for="nom">Votre nom</label>
+                        <input id="nom"
+                               name="nom"
+                               type="text"
+                               placeholder="Ex. Sara"
+                               value="<?= e($nomContact) ?>"
+                               required>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Votre e-mail</label>
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               placeholder="nom@exemple.com"
+                               value="<?= e($emailContact) ?>"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="field">
+                    <label for="message">Votre message</label>
+                    <textarea id="message"
+                              name="message"
+                              placeholder="Écrivez votre message ici..."
+                              required><?= e($messageContact) ?></textarea>
+                </div>
+
+                <button class="btn btn-primary"
+                        type="submit"
+                        name="contact_submit"
+                        value="1">
+                    Valider le formulaire ↗
+                </button>
+
+                <p class="form-note">
+                    Le formulaire doit être relié à un service
+                    d'e-mail pour transmettre réellement les messages.
+                </p>
+
+            </form>
+        </div>
+    </section>
 
 </main>
 
+<footer>
+    <div class="container footer-inner">
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
+        <p>
+            © <?= date("Y") ?> Hamida Bouzaiz — Portfolio personnel.
+        </p>
 
-<footer class="wrap">
-
-    <p>&copy; <?= date('Y') ?> <?= e($site['name']) ?></p>
-
-    <p>
-        <?php foreach ($site['socials'] as $label => $url): ?>
-            <a href="<?= e($url) ?>" target="_blank" rel="noopener">
-                <?= e($label) ?>
+        <div class="footer-links">
+            <a href="#accueil">Accueil ↑</a>
+            <a href="#ateliers">Ateliers</a>
+            <a href="<?= e($linkedin) ?>"
+               target="_blank"
+               rel="noopener noreferrer">
+                LinkedIn ↗
             </a>
-        <?php endforeach; ?>
-    </p>
+        </div>
 
+    </div>
 </footer>
+
+<script>
+    // Menu mobile
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+        const ouvert = navLinks.classList.toggle("open");
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            String(ouvert)
+        );
+
+        menuToggle.textContent = ouvert ? "✕" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach((lien) => {
+        lien.addEventListener("click", () => {
+            navLinks.classList.remove("open");
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.textContent = "☰";
+        });
+    });
+
+    // Animations au défilement
+    const elements = document.querySelectorAll(".reveal");
+
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entrees) => {
+            entrees.forEach((entree) => {
+                if (entree.isIntersecting) {
+                    entree.target.classList.add("visible");
+                    observer.unobserve(entree.target);
+                }
+            });
+        }, {
+            threshold: 0.12
+        });
+
+        elements.forEach((element) => {
+            observer.observe(element);
+        });
+    } else {
+        elements.forEach((element) => {
+            element.classList.add("visible");
+        });
+    }
+</script>
 
 </body>
 </html>
