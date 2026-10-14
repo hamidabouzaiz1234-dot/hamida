@@ -1097,7 +1097,8 @@ function e($valeur) {
                         <article>
                             <h4>01 · Méthode en cascade</h4>
                             <p>Supports et étapes de l’atelier classique.</p>
-                            <a class="card-link" href="/docs/atelier1/at1.pdf" target="_blank" rel="noopener noreferrer">Consulter le support →</a>
+                            <a class="card-link" href="/docs/projet/M%C3%A9thode%20en%20cascade/Notre%20plateforme.pptx" target="_blank" rel="noopener noreferrer">Ouvrir le PowerPoint →</a>
+                            <a class="card-link" href="/docs/projet/M%C3%A9thode%20en%20cascade/Planification%20du%20projet%20VENDO.pdf" target="_blank" rel="noopener noreferrer">Ouvrir le PDF →</a>
                         </article>
                         <article>
                             <h4>02 · Gestion agile</h4>
