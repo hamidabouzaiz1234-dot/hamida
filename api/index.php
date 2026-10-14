@@ -560,6 +560,14 @@ function e($valeur) {
             border-radius: 20px;
         }
 
+        .vendo-logo {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
         .project-vendo summary {
             cursor: pointer;
             list-style: none;
@@ -1088,7 +1096,7 @@ function e($valeur) {
             <div class="project-list">
                 <details class="project-item project-vendo reveal">
                     <summary>
-                        <span class="project-symbol">&#10022;</span>
+                        <img class="vendo-logo" src="/docs/projet/logo/logo.jpeg" alt="Logo du projet Vendo">
                         <h3>Vendo</h3>
                         <p>Un projet qui rassemble trois composants : méthode en cascade, gestion agile et pratique Git.</p>
                         <span class="card-link">Découvrir le projet →</span>
