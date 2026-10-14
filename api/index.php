@@ -549,7 +549,7 @@ function e($valeur) {
 
         .project-list {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr;
             gap: 18px;
         }
 
@@ -560,6 +560,31 @@ function e($valeur) {
             border-radius: 20px;
         }
 
+        .project-vendo summary {
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .project-vendo summary::-webkit-details-marker { display: none; }
+
+        .vendo-components {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+
+        .vendo-components article {
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--white);
+        }
+
+        .vendo-components h4 { margin: 0; color: var(--brown); }
+        .vendo-components p { color: var(--muted); font-size: 13px; }
         .project-symbol {
             font-size: 24px;
             margin-bottom: 15px;
@@ -809,6 +834,7 @@ function e($valeur) {
 
             .atelier-grid,
             .project-list,
+            .vendo-components,
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -938,18 +964,6 @@ function e($valeur) {
                         <div class="portrait-placeholder">
                             <div class="avatar-icon">
 
-                              
-
-
-
-                            </div>
-                            <strong>Votre photo ici</strong>
-                            <small>
-                                Ajoutez votre image :<br>
-                                public/images/photo.jpg
-                            </small>
-                        </div>
-
                 </div>
 
                 <div class="floating-note">
@@ -1072,34 +1086,31 @@ function e($valeur) {
             </div>
 
             <div class="project-list">
-
-                <article class="project-item reveal">
-                    <div class="project-symbol">↘</div>
-                    <h3>Méthode en cascade</h3>
-                    <p>Supports, étapes et documents de l'atelier classique.</p>
-                    <a class="card-link" href="atelier1/index.php">
-                        Consulter →
-                    </a>
-                </article>
-
-                <article class="project-item reveal">
-                    <div class="project-symbol">✳</div>
-                    <h3>Gestion agile</h3>
-                    <p>Organisation du projet, user stories et planification du sprint.</p>
-                    <a class="card-link" href="atelier2/index.php">
-                        Consulter →
-                    </a>
-                </article>
-
-                <article class="project-item reveal">
-                    <div class="project-symbol">⌘</div>
-                    <h3>Pratique Git</h3>
-                    <p>Exercices et exemples liés à la gestion des versions.</p>
-                    <a class="card-link" href="atelier3/index.php">
-                        Consulter →
-                    </a>
-                </article>
-
+                <details class="project-item project-vendo reveal">
+                    <summary>
+                        <span class="project-symbol">&#10022;</span>
+                        <h3>Vendo</h3>
+                        <p>Un projet qui rassemble trois composants : méthode en cascade, gestion agile et pratique Git.</p>
+                        <span class="card-link">Découvrir le projet →</span>
+                    </summary>
+                    <div class="vendo-components">
+                        <article>
+                            <h4>01 · Méthode en cascade</h4>
+                            <p>Supports et étapes de l’atelier classique.</p>
+                            <a class="card-link" href="/docs/atelier1/at1.pdf" target="_blank" rel="noopener noreferrer">Consulter le support →</a>
+                        </article>
+                        <article>
+                            <h4>02 · Gestion agile</h4>
+                            <p>Organisation du projet, user stories et planification du sprint.</p>
+                            <a class="card-link" href="/docs/atelier2/at2.pdf" target="_blank" rel="noopener noreferrer">Consulter le support →</a>
+                        </article>
+                        <article>
+                            <h4>03 · Pratique Git</h4>
+                            <p>Exercices et exemples liés à la gestion des versions.</p>
+                            <span class="card-link">Support Git à ajouter</span>
+                        </article>
+                    </div>
+                </details>
             </div>
         </div>
     </section>
