@@ -26,7 +26,7 @@ $ateliers = [
         "titre" => "Gestion de projet agile",
         "description" => "Organisation du travail en équipe, planification agile, user stories et suivi des tâches.",
         "dossier" => "atelier2",
-        "link"=>"at1.pdf",
+        "link"=>"at2.pdf",
         "icone" => "✳",
         "couleur" => "rose"
     ],
