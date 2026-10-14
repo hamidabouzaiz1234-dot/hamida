@@ -6,7 +6,7 @@ session_start();
  */
 
 $nom = "Hamida Bouzaiz";
-$photo = "/images/pic2.jpg";
+$photo = "/images/pic3.jpeg";
 $logo = "public/images/logo.png";
 $linkedin = "https://www.linkedin.com/";
 
