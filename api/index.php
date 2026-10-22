@@ -26,7 +26,8 @@ $ateliers = [
         "titre" => "Gestion de projet agile",
         "description" => "Organisation du travail en équipe, planification agile, user stories et suivi des tâches.",
         "dossier" => "atelier2",
-        "link"=>"at2.pdf",
+        "link"=>"https://elachchabhajjihidaya.atlassian.net/jira/software/projects/VEN/boards/2/backlog?atlOrigin=eyJpIjoiNzM2NzlmZDZiMjcxNGM5YzkyZGI0MDgyZjYwYWJlNDciLCJwIjoiaiJ9",
+        "externe" => true,
         "icone" => "✳",
         "couleur" => "rose"
     ],
@@ -1068,7 +1069,7 @@ function e($valeur) {
                         <p><?= e($atelier["description"]) ?></p>
 
                         <a class="card-link"
-                           href="/docs/<?= e($atelier["dossier"])."/".e($atelier["link"]) ?>">
+                           href="<?= !empty($atelier["externe"]) ? e($atelier["link"]) : "/docs/".e($atelier["dossier"])."/".e($atelier["link"]) ?>"<?= !empty($atelier["externe"]) ? ' target="_blank" rel="noopener noreferrer"' : "" ?>>
                             Voir l'atelier →
                         </a>
 
@@ -1111,7 +1112,7 @@ function e($valeur) {
                         <article>
                             <h4>02 · Gestion agile</h4>
                             <p>Organisation du projet, user stories et planification du sprint.</p>
-                            <a class="card-link" href="/docs/atelier2/at2.pdf" target="_blank" rel="noopener noreferrer">Consulter le support →</a>
+                            <a class="card-link" href="https://elachchabhajjihidaya.atlassian.net/jira/software/projects/VEN/boards/2/backlog?atlOrigin=eyJpIjoiNzM2NzlmZDZiMjcxNGM5YzkyZGI0MDgyZjYwYWJlNDciLCJwIjoiaiJ9" target="_blank" rel="noopener noreferrer">Consulter le support →</a>
                         </article>
                         <article>
                             <h4>03 · Pratique Git</h4>
