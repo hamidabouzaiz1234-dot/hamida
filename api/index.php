@@ -1117,7 +1117,7 @@ function e($valeur) {
                         <article>
                             <h4>03 · Pratique Git</h4>
                             <p>Exercices et exemples liés à la gestion des versions.</p>
-                            <span class="card-link">Support Git à ajouter</span>
+                            <a class="card-link" href="/docs/atelier3/atelier%203.pdf" target="_blank" rel="noopener noreferrer">Open Git workshop PDF →</a>
                         </article>
                     </div>
                 </details>
