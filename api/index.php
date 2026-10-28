@@ -36,7 +36,7 @@ $ateliers = [
         "titre" => "Atelier pratique Git N° 1",
         "description" => "Initiation à Git, gestion des versions, commits et collaboration autour d'un projet.",
         "dossier" => "atelier3",
-        "link"=>"at1.pdf",
+        "link"=>"atelier 3.pdf",
         "icone" => "⌘",
         "couleur" => "blue"
     ]
